@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %} · Logs{% endblock %}
+{% block content %}
+<div class="p-6 flex flex-col gap-4 h-[calc(100vh-4rem)]">
+  <div class="flex items-center justify-between flex-wrap gap-3">
+    <h1 class="text-2xl font-bold text-lolcat">$ tail -f combeez.log</h1>
+    <div class="flex items-center gap-2">
+      <input id="searchBox" type="text" placeholder="grep logs..."
+        class="bg-surface-container-lowest font-mono text-xs text-on-surface placeholder:text-outline px-3 py-1.5 rounded-lg focus:outline-none w-56"/>
+      <select id="levelFilter" class="bg-surface-container-lowest font-mono text-xs text-on-surface px-2 py-1.5 rounded-lg">
+        <option value="ALL">ALL</option>
+        <option>DEBUG</option><option>INFO</option><option>WARNING</option>
+        <option>ERROR</option><option>CRITICAL</option>
+      </select>
+      <button id="liveToggle" class="font-mono text-xs px-3 py-1.5 rounded-lg bg-surface-container text-tertiary flex items-center gap-1.5">
+        <span class="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse"></span> LIVE
+      </button>
+    </div>
+  </div>
+
+  <div class="flex-1 overflow-y-auto rounded-xl bg-surface-container-lowest p-4 font-mono text-xs" id="logStream">
+    {% for e in entries %}
+    <div class="log-row flex items-start gap-3 py-0.5 hover:bg-surface-container-low/60">
+      <span class="text-outline shrink-0">{{ e.time }}</span>
+      <span class="shrink-0
+        {% if e.level in ['ERROR','CRITICAL'] %}text-primary
+        {% elif e.level == 'WARNING' %}text-[#ffc107]
+        {% elif e.level == 'DEBUG' %}text-outline
+        {% else %}text-secondary{% endif %}">[{{ e.level }}]</span>
+      <span class="text-on-surface-variant shrink-0">{{ e.module }}:</span>
+      <span class="text-on-surface">{{ e.message }}</span>
+    </div>
+    {% else %}
+    <div class="text-on-surface-variant">No logs yet. They'll stream here once RAGer / Cloudes log something via logger.py.</div>
+    {% endfor %}
+  </div>
+</div>
+<script src="{{ url_for('static', filename='js/logs.js') }}"
+        data-refresh="{{ settings.refresh_interval_sec }}"></script>
+{% endblock %}

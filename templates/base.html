@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Combeez Monitor{% block title %}{% endblock %}</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=JetBrains+Mono:wght@100..900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class",
+  theme: { extend: {
+    colors: {
+      /* Warm black + honey-gold palette, matched to the Combeez logo */
+      surface: "#0d0b08", "surface-container-lowest": "#100d09",
+      "surface-container-low": "#17130d", "surface-container": "#1d1811",
+      "surface-container-high": "#241d14", "surface-container-highest": "#2e2518",
+      "surface-bright": "#3a2f1e", "on-surface": "#f5ecd9", "on-surface-variant": "#c9bda0",
+      outline: "#8a7a5c", "outline-variant": "#3a2f1e",
+      primary: "#f2a900", "on-primary": "#1a1200", "primary-container": "#ffcf40",
+      secondary: "#e8871e", "secondary-container": "#ffb703", "on-secondary": "#2a1600",
+      tertiary: "#c9a227", "on-tertiary": "#241c05",
+      error: "#e0563f",
+    },
+    fontFamily: { body: ["Geist"], code: ["JetBrains Mono"] },
+  }}
+};
+</script>
+<style>
+  html,body{margin:0;padding:0;background:#0d0b08;}
+  ::-webkit-scrollbar{width:6px;height:6px;}
+  ::-webkit-scrollbar-thumb{background:#241d14;border-radius:3px;}
+  @keyframes rainbow-shift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+  .text-lolcat{background:linear-gradient(90deg,#ffe066,#f2c94c,#f2a900,#b8860b,#f2a900,#f2c94c,#ffe066);background-size:300% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:rainbow-shift 6s linear infinite;}
+  .rainbow-indicator{background:linear-gradient(90deg,#b8860b,#f2a900,#ffcf40);}
+  .lolcat-subtle .text-lolcat{animation:none;background:linear-gradient(90deg,#f2a900,#ffcf40);}
+</style>
+</head>
+<body class="{{ 'lolcat-subtle' if settings and settings.rainbow_intensity == 'subtle' else '' }} bg-surface font-body text-on-surface antialiased">
+
+<aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest z-50 flex flex-col justify-between border-r border-surface-container-high">
+  <div class="flex flex-col">
+    <div class="px-4 pt-5 pb-4">
+      <div class="flex items-center gap-2">
+        <img src="/logo.png" alt="Combeez" class="w-9 h-9 rounded-lg object-contain bg-surface-container-high p-0.5" onerror="this.style.display='none'"/>
+        <div class="flex flex-col">
+          <span class="font-code text-lg tracking-wider text-lolcat font-bold">COMBEEZ MONITOR</span>
+          <span class="font-code text-xs text-tertiary">&gt; $ combeez --live</span>
+        </div>
+      </div>
+    </div>
+    <div class="h-px w-full bg-surface-container-high"></div>
+    <nav class="flex flex-col gap-1 px-3 pt-3">
+      {% macro navlink(path, icon, label, badge_html='') %}
+      <a href="{{ '/' if path == 'dashboard' else '/' + path if path in ('logs','settings') else '/module/' + path }}"
+         class="flex items-center justify-between px-3 py-2 rounded-lg font-code text-sm transition-colors
+         {{ 'bg-surface-container text-primary shadow-[0_0_12px_rgba(242,169,0,0.25)]' if active_page == path else 'text-on-surface-variant hover:bg-surface-container hover:text-on-surface' }}">
+        <span class="flex items-center gap-2"><span class="material-symbols-outlined text-lg">{{ icon }}</span>{{ label }}</span>
+        {{ badge_html|safe }}
+      </a>
+      {% endmacro %}
+      {{ navlink('dashboard', 'dashboard', 'Dashboard') }}
+      {{ navlink('rager', 'memory', 'RAGer',
+          '<span class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-surface-container-high text-tertiary">[' ~ (stats_status.rager if stats_status is defined else 'RUNNING') ~ ']</span>') }}
+      {{ navlink('cloudes', 'cloud_sync', 'Cloudes',
+          '<span class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-surface-container-high text-secondary">[' ~ (stats_status.cloudes if stats_status is defined else 'RUNNING') ~ ']</span>') }}
+      {{ navlink('logs', 'article', 'Logs') }}
+      {{ navlink('settings', 'tune', 'Settings') }}
+    </nav>
+  </div>
+  <div class="p-4 font-mono text-[11px] text-outline">Python 3.12 · Flask</div>
+</aside>
+
+<div class="pl-72">
+  <header class="fixed top-0 left-72 right-0 h-16 bg-surface/90 backdrop-blur-xl z-40 flex items-center justify-between px-6 border-b border-surface-container-high">
+    <div class="flex items-center gap-2 font-code text-sm">
+      <span class="text-outline">sys</span><span class="text-outline-variant">/</span>
+      <span class="text-primary">combeez</span><span class="text-outline-variant">/</span>
+      <span class="text-secondary">{{ active_page }}</span>
+    </div>
+    <div class="flex items-center gap-2 font-code text-xs text-tertiary">
+      <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-tertiary opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-tertiary"></span></span>
+      Engine Connected
+    </div>
+  </header>
+  <main class="pt-16 min-h-screen">
+    {% block content %}{% endblock %}
+  </main>
+</div>
+{% block scripts %}{% endblock %}
+</body>
+</html>

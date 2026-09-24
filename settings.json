@@ -1,0 +1,5 @@
+{
+  "log_level": "DEBUG",
+  "refresh_interval_sec": 5,
+  "rainbow_intensity": "full"
+}

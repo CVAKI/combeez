@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %} · Settings{% endblock %}
+{% block content %}
+<div class="p-6 max-w-xl flex flex-col gap-6">
+  <h1 class="text-2xl font-bold text-lolcat">$ combeez config --set</h1>
+
+  <form method="post" class="flex flex-col gap-5 bg-surface-container-lowest rounded-xl p-6">
+    <div class="flex flex-col gap-1.5">
+      <label class="font-mono text-xs uppercase tracking-wide text-outline">Log Level</label>
+      <select name="log_level" class="bg-surface-container-low text-on-surface font-mono text-sm px-3 py-2 rounded-lg">
+        {% for lvl in ['DEBUG','INFO','WARNING','ERROR','CRITICAL'] %}
+        <option value="{{ lvl }}" {{ 'selected' if settings.log_level == lvl }}>{{ lvl }}</option>
+        {% endfor %}
+      </select>
+      <p class="text-xs text-on-surface-variant">Applies to every Combeez logger (app.py, RAGer, Cloudes) immediately.</p>
+    </div>
+
+    <div class="flex flex-col gap-1.5">
+      <label class="font-mono text-xs uppercase tracking-wide text-outline">Refresh Interval (seconds)</label>
+      <input type="number" min="2" max="60" name="refresh_interval_sec" value="{{ settings.refresh_interval_sec }}"
+        class="bg-surface-container-low text-on-surface font-mono text-sm px-3 py-2 rounded-lg w-32"/>
+      <p class="text-xs text-on-surface-variant">How often the Logs page polls for new entries.</p>
+    </div>
+
+    <div class="flex flex-col gap-1.5">
+      <label class="font-mono text-xs uppercase tracking-wide text-outline">Rainbow Intensity</label>
+      <div class="flex gap-2">
+        {% for opt in ['subtle', 'full'] %}
+        <label class="flex items-center gap-2 px-3 py-2 rounded-lg bg-surface-container-low cursor-pointer">
+          <input type="radio" name="rainbow_intensity" value="{{ opt }}" {{ 'checked' if settings.rainbow_intensity == opt }}/>
+          <span class="font-mono text-sm capitalize">{{ opt }} lolcat</span>
+        </label>
+        {% endfor %}
+      </div>
+    </div>
+
+    <button type="submit" class="mt-2 px-4 py-2 rounded-lg bg-primary text-on-primary font-mono text-sm font-bold shadow-[0_0_16px_rgba(242,169,0,0.35)] hover:shadow-[0_0_24px_rgba(242,169,0,0.6)] transition-all w-fit">
+      Apply Config
+    </button>
+  </form>
+</div>
+{% endblock %}
