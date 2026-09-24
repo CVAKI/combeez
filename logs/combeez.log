@@ -1,7 +1,0 @@
-{"time": "2026-09-24 12:20:12", "level": "INFO", "module": "combeez.app", "message": "Combeez Monitor starting on http://127.0.0.1:5000"}
-{"time": "2026-09-24 12:20:13", "level": "INFO", "module": "combeez.app", "message": "Combeez Monitor starting on http://127.0.0.1:5000"}
-{"time": "2026-09-24 12:25:29", "level": "INFO", "module": "combeez.app", "message": "Combeez Monitor starting on http://127.0.0.1:5000"}
-{"time": "2026-09-24 12:26:31", "level": "INFO", "module": "combeez.app", "message": "Combeez Monitor starting on http://127.0.0.1:5000"}
-{"time": "2026-09-24 12:26:31", "level": "INFO", "module": "combeez.app", "message": "Combeez Monitor starting on http://127.0.0.1:5000"}
-{"time": "2026-09-24 12:27:01", "level": "INFO", "module": "combeez.app", "message": "Settings updated: {'log_level': 'DEBUG', 'refresh_interval_sec': 5, 'rainbow_intensity': 'subtle'}"}
-{"time": "2026-09-24 12:27:06", "level": "INFO", "module": "combeez.app", "message": "Settings updated: {'log_level': 'DEBUG', 'refresh_interval_sec': 5, 'rainbow_intensity': 'full'}"}
